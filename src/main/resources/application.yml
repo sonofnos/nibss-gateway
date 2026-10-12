@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: nibss-gateway
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5438/nibss}
+    username: ${DB_USERNAME:nibss}
+    password: ${DB_PASSWORD:nibss}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+server:
+  port: ${PORT:8082}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+app:
+  encryption:
+    active-key-version: v1
+    keys:
+      v1: ${ENCRYPTION_KEY_V1:CAG0XNBVDArLJXoujYzRq2+wt6DSHGBPOZu3SGdLf9U=}
+  webhook:
+    hmac-secret: ${WEBHOOK_HMAC_SECRET:change-me-webhook-secret}
+  aml:
+    flag-threshold: ${AML_FLAG_THRESHOLD:1000000.00}
+    watchlist-account-numbers: "${AML_WATCHLIST:0000000001}"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.sonofnos.nibssgateway: INFO

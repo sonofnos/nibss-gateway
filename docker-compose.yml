@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nibss-gateway-postgres
+    environment:
+      POSTGRES_DB: nibss
+      POSTGRES_USER: nibss
+      POSTGRES_PASSWORD: nibss
+    ports:
+      - "5438:5432" # host 5438 - other ports on this machine are used by other local projects
+    volumes:
+      - nibss_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nibss -d nibss"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  nibss-gateway:
+    build: .
+    container_name: nibss-gateway
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/nibss
+      DB_USERNAME: nibss
+      DB_PASSWORD: nibss
+      ENCRYPTION_KEY_V1: ${ENCRYPTION_KEY_V1:-CAG0XNBVDArLJXoujYzRq2+wt6DSHGBPOZu3SGdLf9U=}
+      WEBHOOK_HMAC_SECRET: ${WEBHOOK_HMAC_SECRET:-change-me-webhook-secret}
+      PORT: 8082
+    ports:
+      - "8082:8082"
+
+volumes:
+  nibss_pgdata:

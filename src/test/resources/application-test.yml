@@ -1,0 +1,10 @@
+app:
+  encryption:
+    active-key-version: v1
+    keys:
+      v1: dGVzdC1vbmx5LWtleS1tdXN0LWJlLTMyLWJ5dGVzISE=
+  webhook:
+    hmac-secret: test-webhook-secret
+  aml:
+    flag-threshold: 1000000.00
+    watchlist-account-numbers: "0000000001"
